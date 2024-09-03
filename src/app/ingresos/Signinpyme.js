@@ -51,6 +51,7 @@ export default function Signinpyme() {
                     if (response.ok) {
                         const data = await response.json();
                         console.log(data, "listo");
+                        
                     } else {
                         console.error('Error al guardar el usuario');
                     }

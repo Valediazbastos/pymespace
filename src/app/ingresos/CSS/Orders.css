@@ -55,18 +55,21 @@
     font-style: normal;
   }
 .title{
-    font-size: 20px;
+    
     margin-left: 85px;
+}
+#title{
+  font-size: 20px;
 }
 
 .add{
     display: flex;
-    gap: 3%;
+    gap: 2%;
     align-items: center;
     align-content: center;
     justify-content: center;
     position: relative;
-    right: 85px;
+  
     cursor: pointer;
 }
 button{
@@ -134,7 +137,7 @@ button{
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
-.Modal{
+.Modal1{
   margin-top: 0.5%;
   margin-left: 95px;
   background: rgba(201, 56, 106, 0.23);
@@ -308,4 +311,20 @@ button{
 }
 .imagepage1 , .imagepage2{
   display: flex;
+}
+.articles{
+  margin-left: 90px;
+  margin-top: 3%;
+}
+.yours{
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.businessss{
+  margin-top: 10%;
+  margin-left: 20px;
+}
+.product-images2{
+  margin-top: 5%;
 }

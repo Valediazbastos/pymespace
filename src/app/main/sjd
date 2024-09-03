@@ -1,0 +1,264 @@
+"use client";   
+import React, { use }  from 'react'
+import { useState, useEffect } from 'react';
+import Cookies from 'js-cookie';
+import '../ingresos/CSS/Profile.css'
+
+import Modal from 'react-modal';
+import Dropzone from 'react-dropzone';
+
+
+export default function Profile() {
+    const cookieValue = Cookies.get('usuario');
+
+    const [isEditing, setIsEditing] = useState({
+      nombre: false,
+      email: false,
+      password: false,
+      tipo:'empresa'
+      
+    
+      });
+
+      
+    const [isEditingE, setIsEditingE] = useState({
+      nombre: false,
+      direccion: false,
+      telefono: false,
+      tipo: false,
+      telefono: false,
+    });
+
+      const [user, setUser] = useState([]);
+      const [empresa, setEmpresa] = useState([]);
+
+ useEffect(() => {
+        
+        const fetchProductos = async () => {
+          try {
+            const response = await fetch(`http://localhost:1080/api/usuarios/${cookieValue}`, {
+              method: 'GET',
+            });
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+            console.log("perfil", data);
+            setUser(data);
+          } catch (error) {
+            console.error('Error fetching products:', error);
+          }
+
+
+        };
+      
+        fetchProductos();
+      }, []);
+      
+      
+ useEffect(() => {
+        
+  const fetchProductos2 = async () => {
+   
+
+    try {
+      const response = await fetch(`http://localhost:1080/api/empresas/${cookieValue}`, {
+        method: 'GET',
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      console.log("perfil", data);
+      setEmpresa(data);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+    }
+  };
+
+  fetchProductos2();
+}, []);
+
+    
+     
+  const handleEditToggle = (field) => {
+    setIsEditing((prevEditing) => ({
+      ...prevEditing,
+      [field]: !prevEditing[field],
+    }));
+  };
+
+  const handleEditToggleE = (field) => {
+    setIsEditingE((prevEditing) => ({
+      ...prevEditing,
+      [field]: !prevEditing[field],
+    }));
+  };
+
+    
+      const edit = async(e) => {
+       
+        e.preventDefault();
+        const formData = new FormData();
+        formData.append(e, user[e]);
+  
+        
+        try {
+            const response = await fetch(`http://localhost:1080/api/servicio-editar/${editables.id}`, {
+                method: 'POST',
+                body:formData,
+            });
+      
+                if (response.ok) {
+                    const data = await response.json();
+               
+                   
+                } else {
+                    console.error('Error al guardar el usuario');
+                }
+            } catch (error) {
+                console.error('Error al enviar la solicitud: ', error);
+            }
+      };
+
+      const handleDeleteAccount = () => {
+        if (window.confirm("Are you sure you want to delete your account?")) {
+          // Lógica para eliminar la cuenta (actualmente solo limpia los datos)
+          try {
+            const response =  fetch(`http://localhost:1080/api/eliminar_usuario/${cookieValue}`, {
+              method: 'DELETE',
+            });
+        
+            if (response.ok) {
+              alert('usuario eliminado con éxito');
+              
+            } else {
+              const errorData =  response.json();
+              alert(`Error al eliminar el servicio: ${errorData.message}`);
+            }
+          } catch (error) {
+            console.error('Error al eliminar el servicio:', error);
+            alert('Error al eliminar el servicio');
+          }
+         
+        }
+      };
+      console.log(empresa)
+    return <React.Fragment>
+         <div className="profile-container">
+          <h2 className='poppins-light text-2xl'>Tu perfil de empresa</h2>
+        <br/>
+          <div className="profile-info">
+            <div className="profile-field">
+              <label>Nombre</label>
+              {isEditing.nombre ? (
+                <input
+                  type="text"
+                  name="fullName"
+                  value={user.nombre}
+                  onChange={handleInputChange}
+                />
+              ) : (
+                <span>{user.nombre}</span>
+              )}
+              <button onClick={() => handleEditToggle("fullName")}>
+                {isEditing.nombre ? "Save" : "Edit"}
+              </button>
+            </div>
+            <br/>
+    
+            <div className="profile-field">
+              <label>Email</label>
+              {isEditing.email ? (
+                <input
+                  type="email"
+                  name="email"
+                  value={user.email}
+                  onChange={handleInputChange}
+                />
+              ) : (
+                <span>{user.email}</span>
+              )}
+              <button onClick={() => handleEditToggle("email")}>
+                {isEditing.email ? "Save" : "Edit"}
+              </button>
+            </div>
+            <br/>
+            <div className="profile-field">
+              <label>Password</label>
+              {isEditing.password ? (
+                <input
+                  type="password"
+                  name="password"
+                  value={user.password}
+                  onChange={handleInputChange}
+                />
+              ) : (
+                <span>*******</span>
+              )}
+              <button onClick={() => handleEditToggle("password")}>
+                {isEditing.password ? "Save" : "Change"}
+              </button>
+            </div>
+            <br/>
+            <div className="profile-field">
+              <label>Dirección</label>
+              {isEditingE.direccion ? (
+                <input
+                  type="text"
+                  name="direccion"
+                  value={empresa.direccion}
+                  onChange={handleInputChange}
+                />
+              ) : (
+                <span>{empresa.direccion}</span>
+              )}
+              <button onClick={() => handleEditToggle("email")}>
+                {isEditingE.telefono ? "Save" : "Edit"}
+              </button>
+            </div>
+            <br/>
+
+            <div className="profile-field">
+              <label>Telefono</label>
+              {isEditingE.telefono ? (
+                <input
+                  type="text"
+                  name="direccion"
+                  value={empresa.telefono}
+                  onChange={handleInputChange}
+                />
+              ) : (
+                <span>{empresa.telefono}</span>
+              )}
+              <button onClick={() => handleEditToggle("email")}>
+                {isEditingE.telefono ? "Save" : "Edit"}
+              </button>
+            </div>
+            <br/>
+            <div className="profile-field">
+              <label>Tipo</label>
+              {isEditingE.tipo ? (
+                <input
+                  type="text"
+                  name="direccion"
+                  value={empresa.tipo}
+                  onChange={handleInputChange}
+                />
+              ) : (
+                <span>{empresa.tipo}</span>
+              )}
+              <button onClick={() => handleEditToggle("email")}>
+                {isEditingE.tipo ? "Save" : "Edit"}
+              </button>
+            </div>
+            <br/>
+            <button className="delete-button" onClick={handleDeleteAccount}>
+             <p className='poppins-regular'>Eliminar tu cuenta</p>
+            </button>
+          </div>
+        </div>
+     
+    </React.Fragment>
+    
+}

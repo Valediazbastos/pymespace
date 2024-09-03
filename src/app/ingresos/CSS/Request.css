@@ -1,0 +1,25 @@
+
+.all_request{
+   
+    margin-left: 90px;
+  
+}
+.tus_pedidos{
+    width: 750px;
+}
+.request_per{
+    border: 2px solid #CB3769;
+    border-radius: 20px;
+    padding: 2%;
+}
+.completed {
+    background-color: #CB3769; 
+    text-decoration: line-through; 
+
+  }
+  .specific{
+    margin-top: 2%;
+    margin-left: 250px;
+    align-items: center;
+    justify-content: center;
+  }

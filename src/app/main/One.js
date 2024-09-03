@@ -9,7 +9,7 @@ import Dropzone from 'react-dropzone';
 
 
 export default function One(){
-   
+ 
 
     const cookieValue = Cookies.get('usuario');
     useEffect(() => {

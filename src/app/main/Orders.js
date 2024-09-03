@@ -1,11 +1,60 @@
 "use client";   
-import React, { use }  from 'react'
+import React, { useCallback }  from 'react'
 import { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
 import '../ingresos/CSS/Orders.css'
-
+import Edittion from './Edittion'
+import EdittionProduct from './EdittionProduct'
 import Modal from 'react-modal';
 import Dropzone from 'react-dropzone';
+import Especificaciones from './Especificaciones'
+
+const ArticlesP =  ({ product, openModal, shopItems }) =>  (
+  <div className="card ml-7 producto_cards" >
+  <div  onClick={() => openModal(product)}>
+  <div id='pic_product'>
+    <p className='category px-2 pt-2 poppins-regular'>{product.categoria}</p>
+    {product.foto && <img src={`http://localhost:1080/${product.foto}`} alt={product.nombre} className="product-image" />}
+ 
+    </div>
+ 
+  <div id='card_product'>
+  <h2 className='poppins-semibold text-xl name'>{product.nombre}</h2>
+
+ 
+    <p className='text-xs poppins-light price'>₡{product.precio}</p>
+
+  </div>
+  </div>
+   
+ 
+  
+  </div>
+);
+
+const ArticlesS =  ({ product, openModal, shopItems }) =>  (
+  <div className="card ml-7 producto_cards" >
+       
+  <div  onClick={() => openModal(product)} >
+  <p className='category px-2 pt-2 poppins-regular'>{product.categoria}</p>
+  {product.foto && <img src={`http://localhost:1080/${product.foto}`} alt={product.nombre} className="product-image2" />}
+<div  id='card_content'>
+<h2 className='poppins-semibold text-xl name' >{product.nombre}</h2>
+  
+
+  <p className='text-xs poppins-light  price' >₡{product.precio}</p>
+  </div>
+  </div>
+
+
+ 
+
+
+
+
+
+</div>
+);
 
 
 const Orders = React.memo(() => {
@@ -22,6 +71,9 @@ const Orders = React.memo(() => {
   
    const [modalIsOpen, setModalIsOpen] = useState(false);
    const [modalIsOpen2, setModalIsOpen2] = useState(false);
+   const [modalIsOpen3, setModalIsOpen3] = useState(false);
+   const [modalIsOpenS, setModalIsOpenS] = useState(false);
+   const [modalIsOpenP, setModalIsOpenP] = useState(false);
    const [images, setImages] = useState([]);
    const [images2, setImages2] = useState([]);
 
@@ -31,6 +83,21 @@ const Orders = React.memo(() => {
    const [categoriaS, setCategoriaS] = useState("")
    const [imagesS, setImagesS] = useState([]);
    const [images2S, setImages2S] = useState([]);
+
+
+
+   const [productos, setProductos] = useState([]);
+   const [servicios, setServicios] = useState([]);
+   const [selectedService, setSelectedService] = useState(null);
+   const [selectedP, setSelectedP] = useState(null);
+   const [businessS, setBusinessS] = useState([]);
+
+
+   const [editing, setIsEditing] = useState(true)
+   const [editingP, setIsEditingp] = useState("Orders");
+   
+     
+  
 
   const NextPage = (e) => {
     e.preventDefault(); 
@@ -46,6 +113,10 @@ const Orders = React.memo(() => {
       const openModal2 = () => {
         setModalIsOpen2(true);
       };
+      const openModal3 = () => {
+        setModalIsOpen3(true);
+      };
+     
       const handleDrop = (acceptedFiles) => {
         
         setImages(acceptedFiles);
@@ -72,7 +143,131 @@ const Orders = React.memo(() => {
   setImages2S(prevImages2 => prevImages2.filter((_, index) => index !== indexToRemove));
   };
 
-const handleSubmit = async (e) => {
+
+  const openModalS = async(product) => {
+    setModalIsOpenS(true);
+    setSelectedService(product)
+    console.log('el id que envio es:', product.id)
+          try {
+              const response = await  fetch(`http://localhost:1080/api/empresa-servicio-fotos/${product.id}`);
+              const data = await response.json();
+              setBusinessS(data);
+              console.log('businessS',businessS)
+            
+          } catch (error) {
+              console.error('Error al obtener la empresa:', error);
+          }
+      
+
+
+
+  };
+  
+  const openModalP = async(product) => {
+    setModalIsOpenP(true);
+   
+    setSelectedService(product)
+    console.log('el id que envio es:', product.id)
+          try {
+              const response = await  fetch(`http://localhost:1080/api/empresa-producto-fotos/${product.id}`);
+              const data = await response.json();
+              setBusinessS(data);
+              console.log('businessS',businessS)
+              
+            
+          } catch (error) {
+              console.error('Error al obtener la empresa:', error);
+          }
+      
+  };
+
+const deleteComponent = async(product) =>{
+
+  try {
+    const response = await fetch(`http://localhost:1080/api/eliminar_servicio/${product.id}`, {
+      method: 'DELETE',
+    });
+
+    if (response.ok) {
+      alert('Servicio eliminado con éxito');
+      setProductoCambiado(!productoCambiado);
+      // Cierra el modal después de la eliminación
+    } else {
+      const errorData = await response.json();
+      alert(`Error al eliminar el servicio: ${errorData.message}`);
+    }
+  } catch (error) {
+    console.error('Error al eliminar el servicio:', error);
+    alert('Error al eliminar el servicio');
+  }
+} 
+
+const [productoCambiado, setProductoCambiado] = useState(false);
+
+const [productoCambiado2, setProductoCambiado2] = useState(false);
+const deleteComponentP = async(product) =>{
+
+  try {
+    const response = await fetch(`http://localhost:1080/api/eliminar_producto/${product.id}`, {
+      method: 'DELETE',
+    });
+
+    if (response.ok) {
+      alert('Servicio eliminado con éxito');
+      setProductoCambiado(!productoCambiado);
+      // Cierra el modal después de la eliminación
+    } else {
+      const errorData = await response.json();
+      alert(`Error al eliminar el servicio: ${errorData.message}`);
+    }
+  } catch (error) {
+    console.error('Error al eliminar el servicio:', error);
+    alert('Error al eliminar el servicio');
+  }
+} 
+
+
+const EditadoP = useCallback(async (newMenu) => {
+  setIsEditingp(newMenu);
+  console.log(editingP)
+ 
+}, []);
+const Editado = useCallback(async (newMenu) => {
+  setIsEditingp(newMenu);
+  console.log(editingP)
+ 
+}, []);
+
+
+const EspecificacionesS = useCallback(async (newMenu) => {
+  setIsEditingp(newMenu);
+  
+ 
+}, []);
+
+
+
+const editComponent = async(product) =>{
+  Cookies.set('editables', JSON.stringify(product), { path: '/' });
+ 
+} 
+
+
+const editComponentP = async(product) =>{
+  Cookies.set('editablesP', JSON.stringify(product), { path: '/' });
+  
+} 
+
+
+
+
+
+
+
+
+
+
+const   handleSubmit = async (e) => {
   e.preventDefault();
   const formData = new FormData();
   formData.append('nombre', nombre);
@@ -96,8 +291,8 @@ const handleSubmit = async (e) => {
 
           if (response.ok) {
               const data = await response.json();
-              console.log(data);
-             
+         
+              setProductoCambiado(!productoCambiado);
           } else {
               console.error('Error al guardar el usuario');
           }
@@ -163,6 +358,7 @@ const handleSubmit = async (e) => {
             if (response.ok) {
                 const data = await response.json();
                 console.log(data);
+                setProductoCambiado2(!productoCambiado2);
               
             } else {
                 console.error('Error al guardar el usuario');
@@ -203,14 +399,65 @@ const handleSubmit = async (e) => {
 
       const closeModal = () => {
         setModalIsOpen(false);
+        setModalIsOpenP(false);
         setModalIsOpen2(false);
+        setModalIsOpenS(false)
       };
+
+  
+      useEffect(() => {
+        console.log('hola');
+        const fetchProductos = async () => {
+          try {
+            const response = await fetch(`http://localhost:1080/api/articulo-producto/${cookieValue}`, {
+              method: 'GET',
+            });
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+            console.log("productos", data);
+            setProductos(data);
+          } catch (error) {
+            console.error('Error fetching products:', error);
+          }
+        };
+      
+        fetchProductos();
+      }, [productoCambiado]);
+
+      useEffect(() => {
+        console.log('hola');
+        const fetchProductos = async () => {
+          try {
+            const response = await fetch(`http://localhost:1080/api/articulo-servicio/${cookieValue}`, {
+              method: 'GET',
+            });
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+            console.log("productos", data);
+            setServicios(data);
+          } catch (error) {
+            console.error('Error fetching products:', error);
+          }
+        };
+      
+        fetchProductos();
+      }, []);
+      
+     
     return (
         <React.Fragment>
+          
+             {editingP === 'Orders' && ( 
+<div>
+                 <br/>
+            <h1 className='title poppins-bold' id='title'>PYMESPACE quiere verte crecer</h1>
+            <p className='title poppins-light'>En este espacio ten la libertad de ver tus artículos y editarlos a tu gusto</p>
             <br/>
-            <h1 className='title'>PYMESPACE quiere verte crecer</h1>
-            <br/>
-            
+            <br/>            
             <div className='add' >
                     <div id='product' className='px-10 py-5' >
                         <h2 className='poppins-bold text-2xl'>Agregar Productos</h2>
@@ -230,8 +477,193 @@ const handleSubmit = async (e) => {
                     </div>
           
             </div>
+            <br/>
+            <div className='edit flex'>
+             
+                <div className='articles'>
+                  <h2>Tus artículos</h2>
+                  <br/>
+                  <div className='yours'>
+                    {productos.map((product) => (
+                  <div  key={product.id} className='flex' >
+                     <ArticlesP key={product.id} product={product}  openModal={openModalP}/>
+                     <Modal  className='Modal4' isOpen={modalIsOpenP} onRequestClose={closeModal} contentLabel="Modal de tu Producto/Servicio">
+                   <button id='x' className='absolute top-3 right-2' onClick={closeModal}><box-icon name='x-circle' color='#CB3769' style={{width:'50px', height:'50px'}}  ></box-icon></button>
+                   
+                     
+                  
+                      {selectedService && (
+                        <div className='modalOpen'>
+                         
+                            <div id='section' className='section'>
+                            
+                              <div className='container'>
+                                  <div className='left'>
+                                 
+                                  {selectedService && (
+                                    <img src={`http://localhost:1080/${selectedService.foto}`} alt={selectedService.nombre} className="product-image_details2" />
+                                  )}
+                                </div>
+                                <div className='right'>
+                                  <div id='card_no_description'>
+                                 <div className='flex items-center'>
+                                 <h1 className='poppins-bold text-4xl ' id='nameProduct' >{selectedService.nombre}</h1>
+                                  <button id='x' className='relative top-2'  onClick={() => {
+                                        editComponentP(selectedService);
+                                        EditadoP('Producto');
+                                      }}><box-icon name='edit-alt' type='solid' color='#CB3769' style={{width:'50px', height:'50px'}}></box-icon></button>
+                              <button id='x'  className='relative top-2'  onClick={() => deleteComponentP(selectedService)}><box-icon type='solid' name='trash-alt' color='#CB3769' style={{width:'50px', height:'50px'}}></box-icon>
+                              </button>
+                             
+                                 </div>
+                                
+                                  <div className='business_category relative flex top-[-2px] gap-x-2'>
+                                    <p>|</p>
+                                  <p className='poppins-light ' id='categoryProduct' >{selectedService.categoria}</p>
+                                 
+                                  </div>
+                                  <p className='text-base poppins-light'>₡{selectedService.precio}</p>
+                                
+                                  </div>
+                                  <p className='poppins-semibold'>Descripción:</p>
+                                  <div id='description_all'>
+                                  <box-icon name='circle' type='solid' style={{width:'16px'}} ></box-icon>
+                                  <p className='description poppins-regular'>{selectedService.descripcion}</p>
+                                 
+                                  </div>
+                                  <br/>
+                                  <div className='co-images flex h-2/4'>
+                               
+                                     </div>
+                                 </div>
+                              </div>
+                            </div>
+                      
+                        </div>
+                      )}
+                     
+                      
+                  
+                     
+                  
+                    
+                     
+                    </Modal>
+                    </div>
+                
+                  
+                  
+                 ))}
+               
+                
+                   </div>
+                   <br/>
+                   <br/>
+                  
 
-      <Modal  className='Modal' isOpen={modalIsOpen} onRequestClose={closeModal} contentLabel="Modal de Agregar Producto/Servicio">
+
+                   <div className='yours'>
+                    {servicios.map((product) => (
+                  <div  key={product.id} className='flex' >
+                     <ArticlesS key={product.id} product={product}  openModal={openModalS}/>
+                     <Modal  className='Modal3' isOpen={modalIsOpenS} onRequestClose={closeModal} contentLabel="Modal de tu Producto/Servicio">
+                   <button id='x' className='absolute top-3 right-2' onClick={closeModal}><box-icon name='x-circle' color='#1EA4D9' style={{width:'50px', height:'50px'}}  ></box-icon></button>
+                   
+                     
+                  
+                      {selectedService && (
+                        <div className='modalOpen'>
+                         
+                            <div id='section' className='section'>
+                            
+                              <div className='container'>
+                                  <div className='left'>
+                                 
+                                  {selectedService && (
+                                    <img src={`http://localhost:1080/${selectedService.foto}`} alt={selectedService.nombre} className="product-image_details2" />
+                                  )}
+                                </div>
+                                <div className='right'>
+                                  <div id='card_no_description'>
+                                 <div className='flex items-center'>
+                                 <h1 className='poppins-bold text-4xl ' id='nameProduct' >{selectedService.nombre}</h1>
+                                  <button id='x' className='relative top-2' onClick={() => {
+                                        editComponent(selectedService);
+                                        Editado('Servicio')}}
+                                        ><box-icon name='edit-alt' type='solid' color='#1ea4d9' style={{width:'50px', height:'50px'}}></box-icon></button>
+                              <button id='x'  className='relative top-2'  onClick={() => deleteComponent(selectedService)}><box-icon type='solid' name='trash-alt' color='#1ea4d9' style={{width:'50px', height:'50px'}}></box-icon>
+                              </button>
+                              <button id='x'  className='relative top-2' > <box-icon type='solid' name='file-plus'
+                              onClick={() => {
+                                editComponent(selectedService);
+                                EspecificacionesS('Servicio_add')}}
+                              color='#1ea4d9' style={{width:'50px', height:'50px'}}></box-icon>
+                              </button>
+                              
+                             
+                                 </div>
+                                
+                                  <div className='business_category relative flex top-[-2px] gap-x-2'>
+                                    <p>|</p>
+                                  <p className='poppins-light ' id='categoryProduct2' >{selectedService.categoria}</p>
+                                 
+                                  </div>
+                                  <p className='text-base poppins-light'>₡{selectedService.precio}</p>
+                                
+                                  </div>
+                                  <p className='poppins-semibold'>Descripción:</p>
+                                  <div id='description_all'>
+                                  <box-icon name='circle' type='solid' style={{width:'16px'}} ></box-icon>
+                                  <p className='description poppins-regular'>{selectedService.descripcion}</p>
+                                 
+                                  </div>
+                                  <br/>
+                                  <div className='co-images flex h-2/4'>
+                                  
+                                     </div>
+                                 </div>
+                              </div>
+                            </div>
+                      
+                        </div>
+                      )}
+                     
+                      
+                  
+                     
+                  
+                    
+                     
+                    </Modal>
+                    </div>
+                
+                  
+                  
+                 ))}
+                   </div>
+                   
+              </div>
+            </div>
+
+            <div className='flex flex-wrap businessss'>
+                
+                 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      <Modal  className='Modal1' isOpen={modalIsOpen} onRequestClose={closeModal} contentLabel="Modal de Agregar Producto/Servicio">
        
      <div className='modalOpen'>
       <form  onSubmit={handleSubmit} >
@@ -292,6 +724,8 @@ const handleSubmit = async (e) => {
          
             
           <br/>  <br/>
+          
+
             <input
                 required=""
                 class="peer w-full bg-transparent outline-none px-4 text-base rounded bg-white border border-[#C9386A] focus:shadow-md"
@@ -555,7 +989,7 @@ const handleSubmit = async (e) => {
                   </select>
             
                 <br/>
-            <button type="submit" id="button2" >Guardar</button>
+            <button type="submit" id="button2" >Guardar </button>
            
                 </div>
   
@@ -643,6 +1077,22 @@ const handleSubmit = async (e) => {
         
          
         </Modal>
+              </div>
+              )}
+              
+            {editingP === 'Servicio' && (
+                         <Edittion/>
+                          )} 
+                           {editingP === 'Producto' && (
+                         <EdittionProduct/>
+                          )} 
+
+                  {editingP === 'Servicio_add' && (
+             <Especificaciones/>
+                  )} 
+                              
+       
+           
         </React.Fragment>
     )
   });

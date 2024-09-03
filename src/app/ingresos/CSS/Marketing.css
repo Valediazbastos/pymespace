@@ -1,0 +1,363 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+*{
+  padding: 0%;
+  margin: 0%;
+}
+
+
+.poppins-thin {
+    font-family: "Poppins", sans-serif;
+    font-weight: 100;
+    font-style: normal;
+  }
+  
+  .poppins-extralight {
+    font-family: "Poppins", sans-serif;
+    font-weight: 200;
+    font-style: normal;
+  }
+  
+  .poppins-light {
+    font-family: "Poppins", sans-serif;
+    font-weight: 300;
+    font-style: normal;
+  }
+  
+  .poppins-regular {
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+  }
+  
+  .poppins-medium {
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+  }
+  
+  .poppins-semibold , label{
+    font-family: "Poppins", sans-serif;
+    font-weight: 600;
+    font-style: normal;
+  }
+  
+  .poppins-bold {
+    font-family: "Poppins", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+  }
+  
+  .poppins-extrabold {
+    font-family: "Poppins", sans-serif;
+    font-weight: 800;
+    font-style: normal;
+  }
+
+.myCard {
+    background-color: transparent;
+    width: 190px;
+    height: 254px;
+    perspective: 1000px;
+  }
+  
+  .title_2 {
+    font-size: 1.5em;
+    font-weight: 900;
+    text-align: center;
+    margin: 0;
+  }
+  
+  .innerCard {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.8s;
+    transform-style: preserve-3d;
+    cursor: pointer;
+  }
+  
+  .myCard:hover .innerCard {
+    transform: rotateY(180deg);
+  }
+  
+  .frontSide,
+  .backSide {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 1rem;
+    color: white;
+    box-shadow: 0 0 0.3em rgba(255, 255, 255, 0.5);
+    font-weight: 700;
+  }
+  
+  .frontSide,
+  .frontSide::before {
+    background: linear-gradient(43deg, rgb(65, 88, 208) 0%, rgb(200, 80, 192) 46%, rgb(255, 204, 112) 100%);
+  }
+  
+  .backSide,
+  .backSide::before {
+    background-image: linear-gradient(160deg, #0093E9 0%, #80D0C7 100%);
+  }
+  
+  .backSide {
+    transform: rotateY(180deg);
+  }
+  
+  .frontSide::before,
+  .backSide::before {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    content: '';
+    width: 110%;
+    height: 110%;
+    position: absolute;
+    z-index: -1;
+    border-radius: 1em;
+    filter: blur(20px);
+    animation: animate 5s linear infinite;
+  }
+  
+  @keyframes animate {
+    0% {
+      opacity: 0.3;
+    }
+  
+    80% {
+      opacity: 1;
+    }
+  
+    100% {
+      opacity: 0.3;
+    }
+  }
+.foundations{
+  gap: 3%;
+  display: flex;  
+  flex-wrap: wrap;
+}
+.myCard{
+  margin-top: 2%;
+}
+.social{
+  text-align: center;
+}
+
+.cardSM {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  perspective: 1000px;
+  box-shadow: 0 0 0 5px #ffffff80;
+  transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  bottom: 5%;
+}
+.cardSMF{
+  background-color: #2151CD;
+}
+
+.cardSMX{
+  background-color: #1EA4D9;
+}
+.cardSMI{
+  background-color: #c038b7;
+}
+.cardSMIN{
+  background-color: #D97218;
+}
+
+.cardSM svg {
+  width: 48px;
+  fill: #333;
+  transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.cardSM:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 16px rgba(255, 255, 255, 0.2);
+}
+
+.cardSM__content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+  background-color: #f2f2f2;
+  transform: rotateX(-90deg);
+  transform-origin: bottom;
+  transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.cardSM:hover .cardSM__content {
+  transform: rotateX(0deg);
+}
+
+.cardSM__title {
+  margin: 0;
+  font-size: 24px;
+  color: #333;
+  font-weight: 700;
+}
+
+.cardSM:hover svg {
+  scale: 0;
+}
+
+.cardSM__description {
+  margin: 10px 0 0;
+  font-size: 14px;
+  color: #777;
+  line-height: 1.4;
+}
+.social_media{
+
+  display: flex;  
+  justify-content: center;
+  align-items: center;
+}
+
+/* From Uiverse.io by alexruix */ 
+.carta{
+  width: 190px;
+  height: 254px;
+  border-radius: 20px;
+  background: #f5f5f5;
+  position: relative;
+  padding: 1.8rem;
+  border: 2px solid #c3c6ce;
+  transition: 0.5s ease-out;
+  overflow: visible;
+ }
+ 
+ .carta-details {
+  color: black;
+  height: 100%;
+  gap: .5em;
+  display: grid;
+  place-content: center;
+ }
+ 
+ .carta-button {
+  transform: translate(-50%, 125%);
+  width: 60%;
+  border-radius: 1rem;
+  border: none;
+  background-color: #008bf8;
+  color: #fff;
+  font-size: 1rem;
+  padding: .5rem 1rem;
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  opacity: 0;
+  transition: 0.3s ease-out;
+ }
+ 
+ .texto-body {
+  color: rgb(134, 134, 134);
+ }
+ 
+ /*Text*/
+ .texto-title {
+  font-size: 1.5em;
+  font-weight: bold;
+ }
+ 
+ /*Hover*/
+ .carta:hover {
+  border-color: #008bf8;
+  box-shadow: 0 4px 18px 0 rgba(0, 0, 0, 0.25);
+ }
+ 
+ .carta:hover .cartabutton {
+  transform: translate(-50%, 50%);
+  opacity: 1;
+ }
+  #fundamentos{
+    margin-left: 95px;
+  }
+
+  .concept-box {
+    border: 2px solid #2151CD;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.concept-titlew {
+    color: #4B0082; /* Use the appropriate color */
+    font-weight: bold;
+    font-size: 1.5em;
+}
+
+.concept-content p {
+    margin: 5px 0;
+}
+
+.lesson-menu button {
+   
+    background-color: #c9386b42; /* Use the appropriate purple color */
+    border: none;
+    color: black;
+    padding: 10px 20px;
+    margin: 5px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 1em;
+    border: 2px solid #C9386A;
+}
+
+.lesson-menu button:hover {
+  color: white;
+    background-color: #C9386A; /* Slightly lighter shade */
+}
+.lesson-two-content {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.narrow-card {
+  border: 2px solid #87CEEB; /* Borde color celeste */
+  border-radius: 10px;
+  padding: 10px;
+  background-color: #F0F8FF; /* Fondo celeste claro */
+  margin-bottom: 10px;
+  max-width: 600px; /* Tarjeta más angosta */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para dar un efecto de elevación */
+}
+
+.narrow-card h4 {
+  color: #4682B4; /* Títulos en celeste oscuro */
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.narrow-card p {
+  margin: 5px 0;
+}
+
+.course-completed {
+  background-color: #3bdbff; /* Cambia el color de fondo a amarillo, por ejemplo */
+  /* Añade más estilos si es necesario */
+}
